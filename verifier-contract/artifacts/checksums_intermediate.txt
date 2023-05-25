@@ -1,0 +1,1 @@
+ee5c5573071511dd561f53969f5d486919fc083f9764af2ba134453f28234597  ./target/wasm32-unknown-unknown/release/verifier_contract.wasm

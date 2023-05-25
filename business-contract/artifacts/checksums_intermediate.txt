@@ -1,0 +1,1 @@
+aca354d74c5a729c9a8546ea1a601a71fd37cbea5ee5d6a95c1aec980970fdcd  ./target/wasm32-unknown-unknown/release/business_contract.wasm
