@@ -86,7 +86,7 @@ pub fn get_verification_key() -> PreparedVerifyingKey<Bls12> {
     prepare_verifying_key(&vkk)
 }
 
-pub fn process_proof(proof: String) -> Proof<Bls12> {
+pub fn process_proof(proof: String, public_signal: u64) -> Proof<Bls12> {
     let pof: ProofStr = serde_json::from_str(&proof).unwrap();
     let pi_a = pof.pi_a;
     let pi_b = pof.pi_b;
