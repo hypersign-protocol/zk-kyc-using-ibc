@@ -1,0 +1,7 @@
+{
+    "name": "wallet2",
+    "type": "local",
+    "address": "wasm1pgs6qw5dwaghrvkvu6fk42tfmft6vh79jdysfy",
+    "pubkey": "{\"@type\":\"/cosmos.crypto.secp256k1.PubKey\",\"key\":\"A1fK0CHmcog0BqOzxJY5k0VAa3gg2qJBhO1R8/Qy8LKx\"}",
+    "mnemonic": "winner tomato chapter post caught genuine badge symptom boy hole scorpion action fiscal zero fashion involve bubble similar scissors empty brisk any squeeze chef"
+}
