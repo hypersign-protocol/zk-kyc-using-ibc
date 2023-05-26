@@ -115,8 +115,6 @@ wasmd tx bank send $(wasmd keys show node1 -a --keyring-backend test) wasm1pgs6q
 ```
 
 ### Creating connection between Hypersign and Wasm nodes
-
-
 ```bash
 hermes create connection --a-chain wasmdnode --b-chain hidnode
 ```
@@ -257,6 +255,7 @@ hermes create channel \
 ```bash
 hermes start
 ```
+
 ## Cross chain contract interaction 
 
 ### Lets's do the KYC on business contract
@@ -288,7 +287,7 @@ data:
 
 Its not! reason being, hermes automatically not pushing the packets to hypersign (except for rare situation) so we need to manually ask hermes to push the packets to hypersign.
 
-### Hermes push packets
+## Hermes push packets
 
 Hermes pushing packets to hypersign and receiving ack from hypersign and pushing it back to business chain
 
@@ -296,15 +295,6 @@ Hermes pushing packets to hypersign and receiving ack from hypersign and pushing
 hermes clear packets --chain wasmdnode --port wasm.wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d --channel channel-0
 ```
 
-### Check if your wallet is whitelisted or not
+Once you push the packet, query `has_kyced` function once again to see if the wallet is whitelisted. 
 
-Now if we run the getter command again
-
-```bash
-wasmd q wasm contract-state smart wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d '{"has_kyced": {"address": "wasm19n3v8rx66hj2yqadmuuz48zxuhu5eu4nct6eg0"}}'
-data:
-  result: address is KYCed
-```
-
-it says verified!
 
