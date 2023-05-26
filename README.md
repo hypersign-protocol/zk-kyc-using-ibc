@@ -121,8 +121,10 @@ wasmd tx bank send $(wasmd keys show node1 -a --keyring-backend test) wasm1pgs6q
 hermes create connection --a-chain wasmdnode --b-chain hidnode
 ```
 
-Channel creation between contracts deployed on both the cahins.  but before that respective contracts needs to be deployed on respective chains. 
 
+Next we have to create the channel, but before that let's deploy our zk-verifier contract on hypersign and business  (whitelisting pool) contract on wasm blockchain.
+
+## Smart Contract
 
 ### Building verifier contract on hypersign chain:
 
@@ -192,7 +194,10 @@ o/p
 ...
 ```
 
-Now we will create channel  but before that we need to know ports of these respective contracts: 
+
+## IBC channel creation 
+
+Now we will create channel but before that we need to know ports of these respective contracts: 
 
 Port for hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7
 
@@ -247,17 +252,14 @@ hermes create channel \
 	--channel-version 'zk-1'
 ```
 
-Now lets start the hermes
+### Finally start the hermes
 
 ```bash
 hermes start
 ```
+## Cross chain contract interaction 
 
---- 
-
-# contract interaction 
-
-## Lets's do the KYC on business contract
+### Lets's do the KYC on business contract
 
 ```bash
 wasmd tx wasm execute wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d '{
@@ -271,7 +273,7 @@ wasmd tx wasm execute wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0
 
 ```
 
-## Check if your wallet is whitelisted or not
+### Check if your wallet is whitelisted or not
 
 ```bash
 wasmd q wasm contract-state smart wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d '{"has_kyced": {"address": "wasm19n3v8rx66hj2yqadmuuz48zxuhu5eu4nct6eg0"}}' --node tcp://localhost:36657
@@ -286,12 +288,15 @@ data:
 
 Its not! reason being, hermes automatically not pushing the packets to hypersign (except for rare situation) so we need to manually ask hermes to push the packets to hypersign.
 
-## hermes pushing packets to hypersign and receiving ack from hypersign and pushing it back to business chain
+### Hermes push packets
+
+Hermes pushing packets to hypersign and receiving ack from hypersign and pushing it back to business chain
 
 ```bash 
 hermes clear packets --chain wasmdnode --port wasm.wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d --channel channel-0
 ```
 
+### Check if your wallet is whitelisted or not
 
 Now if we run the getter command again
 
@@ -301,12 +306,5 @@ data:
   result: address is KYCed
 ```
 
-it says verified
+it says verified!
 
-wasmd q wasm contract-state smart wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d '{"has_kyced": {"address": "wasm1zhu379dw7sh8q077c5eug704splh3qu8s07gtj"}}'
-
-wasm1tgvec6zd0j5t7y4qtj902wtgxjkm6w96zt5da4
-
-
-
-wasmd tx bank send $(wasmd keys show node1 -a --keyring-backend test) wasm1hyvz749sx3e9dhz52ceru437p79nfxslkes2s2 1000000uwasm --broadcast-mode block  --keyring-backend test --chain-id wasmdnode --yes 
