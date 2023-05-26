@@ -1,108 +1,121 @@
-## How it works
+## High level architecture
 
+![img](https://private-user-images.githubusercontent.com/15328561/241210272-eb3b520b-c531-444b-aca3-90c8bc8d70ea.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJrZXkxIiwiZXhwIjoxNjg1MTAxNzM1LCJuYmYiOjE2ODUxMDE0MzUsInBhdGgiOiIvMTUzMjg1NjEvMjQxMjEwMjcyLWViM2I1MjBiLWM1MzEtNDQ0Yi1hY2EzLTkwYzhiYzhkNzBlYS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwNTI2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDUyNlQxMTQzNTVaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1mZGIwYTQ1N2VjOTRjN2JjYzg2N2YxMzNjZDk3MWNiMmFmOWJjNzZjMjM1MzUyOWQ0YjY1MzVkYjcxMTBiMzQwJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.S19iYSkslzXUtxfh8kMMZgmfrdpH792Ea7xl19uxnyI)
 
-
-![img](https://user-images.githubusercontent.com/15328561/236688594-9a0e5477-627b-46eb-81c0-1a57c63eb788.png)
-
-![img](https://private-user-images.githubusercontent.com/15328561/241208065-da914e4d-a2a5-4ff3-aba7-fb4c79bcde8f.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJrZXkxIiwiZXhwIjoxNjg1MTAxMDkwLCJuYmYiOjE2ODUxMDA3OTAsInBhdGgiOiIvMTUzMjg1NjEvMjQxMjA4MDY1LWRhOTE0ZTRkLWEyYTUtNGZmMy1hYmE3LWZiNGM3OWJjZGU4Zi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwNTI2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDUyNlQxMTMzMTBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05ZTg1MzRhY2RmNTc0ZDc0NDY4ODZkOTQ3MTI3Yzc4ZDBkNTlmM2ZhYjgyMGYwZjUxN2U2MjM4Mzg2MzdkMmRlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.0epvq-RcUQ8JoMxCcZ4CBjV34f-rsvlv3usdn7uj5HU)
+## zk-Proof generation from Verifiable Presentation
 
 ![s](https://private-user-images.githubusercontent.com/15328561/241208084-7673170c-f579-4cc1-aedd-bd08e2ddc521.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJrZXkxIiwiZXhwIjoxNjg1MTAxMDkwLCJuYmYiOjE2ODUxMDA3OTAsInBhdGgiOiIvMTUzMjg1NjEvMjQxMjA4MDg0LTc2NzMxNzBjLWY1NzktNGNjMS1hZWRkLWJkMDhlMmRkYzUyMS5qcGc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwNTI2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDUyNlQxMTMzMTBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zZjk4NjhiYmUxOTM3ZTMzYTZiMzM3OWE1Njc5MmYxNWJjZjVlZDA2MGQ2ZmRhMmZjNWFiODExZWQ0MDZkZjkxJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.3ql6ExZBBhcWBHQ_av3QdbMBuzgyQA_LKLAQCq_dejc)
 
-![img](https://user-images.githubusercontent.com/15328561/199429349-0cd046da-d17a-4931-89ef-5ffdcdddf13f.png)
 
 
-- [sequenceDiagram](https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGECcD2BnZBaWALAhiAdtAFoDS0AggCYXySrQDqmYk4IyoeA5gFDfYDGwRPGgBVZJHjcADtnih+IWXmDQAapJAAzEJLiIV8AaoAUACQCe0ychCcCWXHgCU0AMQAjAJxbskAKwycgpK2CrQAEIArrZ4tMj6hsbQJvTYyAC2cDj4rp5eHhS+QfIgisqqADIRZInARoIpaZnZTnnehcW84npoAHzRsfF1DabNWY650ABccNjg4NAAVEvEAJqwK9AAyhnBI8kAogAekPxRwDAZkMCYiBS8HojH0PB2mKqIWpEx+MOwBnqyVS6QmORcsxW602SxSAB0CNBpEgvrNtvV8JwADQI6DQbBUGioNEYrhYvG4pFRDysfgAfVs9nmswAkiocYiQB56fwcHg4uASW8uAjnI9ntBEAA3PSDP50AFJRoglqTCF4lYsiKwaAABQEAGsbls2EiaLIaBRoLdsKp8PxwFEKLR8dBzuxEFl2PAooIojRlksNG8tBYtuKXtLZb84grAaMmqDWrlIUHNKGtgBvSkE6jxDl45GIL6U6TU2kMux4eYIgC+vDlsYSiqByvGyZc0H66nTuhELYT5isNirHecaMgeCtmu1esNxthEclMpEwe0fYOyss1ngjIc4PHeLxABFaJp5iAAF4wGc6-X8I3ALZhCiUo+QY6t1S3G9pkNh2FvV9YAlyjVdez0AdgW3Ed7DHWYj0QpCjwAJSiAgViLfh4jpIsvhMTCUS0IVMXJMsaTKSsmUFHZSU4FZnBWXEhGgFdtAsa1MBgQhJEQaBiDwRAAHcoAoTgYF1IiADpoBQm5-QwpZ6iiSATW+PDvlNKULwockWAkQNfHACQVlAlcexDDcoK3Ydd1HNVDyPSgrR-Vje34W0QAMV5aCicBgARfBON-LUdTIB9BJEyAxMga4VC2N9kK+YLA1CucHwXXhuDXHRIPjaDbL3McuwGGN-nytskwcicp2gDxDVS2d70fUzuCeSNzMbcqlTGKqDwQ5DUJuN5IBlNzLI80BvKJPyAoILQkCyW90papYAHIEkNSLRPEuLVDM6MhjjHrE1Vfq5gWVLuXCg1tui8TiAsfgtmuW57mtRBEsGo8hKYS5WHYFLcyJZAZIRbZsDG1zgeGILXOs4ANugdhbUgXhqlqBHTrBNoSq646v2x+CLsWFYzDIbY6WhQ5jy2XZ9ixgBFFT4A4gBZG47lfREkJY3kzgNaBtBS-Ay1UGG6FNX7mABy4HjaiUoC0T5vnx5sKt6s62lTcnKep2nYRMHNCXiEiRRcA6RDVzdNZxlNoEqYtBa0YQUpoABHFT2Gi-ETclgh4Y1pGUcuBsyoJwd2wckqMZtonqtk+T4EUgAiCWElNaFopTtTfbzVBKVNZEz3COGuJt4PgFRvTjMgRKaGABTAzTv2M4SAA5AB5AAVfiNmzlYgA)
+## Cross-Chain zk-Proof Verification using IBC Query
 
-## Setup 
+![img](https://user-images.githubusercontent.com/15328561/199429349-0cd046da-d17a-4931-89ef-5ffdcdddf13f.png) 
 
-============ Setup Hidnode
+![img](https://private-user-images.githubusercontent.com/15328561/241208065-da914e4d-a2a5-4ff3-aba7-fb4c79bcde8f.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJrZXkxIiwiZXhwIjoxNjg1MTAxMDkwLCJuYmYiOjE2ODUxMDA3OTAsInBhdGgiOiIvMTUzMjg1NjEvMjQxMjA4MDY1LWRhOTE0ZTRkLWEyYTUtNGZmMy1hYmE3LWZiNGM3OWJjZGU4Zi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwNTI2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDUyNlQxMTMzMTBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05ZTg1MzRhY2RmNTc0ZDc0NDY4ODZkOTQ3MTI3Yzc4ZDBkNTlmM2ZhYjgyMGYwZjUxN2U2MjM4Mzg2MzdkMmRlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.0epvq-RcUQ8JoMxCcZ4CBjV34f-rsvlv3usdn7uj5HU)
 
-1. git clone https://github.com/hypersign-protocol/hid-node.git
-2. cd hid-node && git checkout cosmwasm-integration
-3. make install (or -> make build && sudo mv ./build/hid-noded /usr/local/bin)
-4. sh ./localnetsetup.sh  (It sets up hid-node config file)
+- [sequence diagram src](https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGECcD2BnZBaWALAhiAdtAFoDS0AggCYXySrQDqmYk4IyoeA5gFDfYDGwRPGgBVZJHjcADtnih+IWXmDQAapJAAzEJLiIV8AaoAUACQCe0ychCcCWXHgCU0AMQAjAJxbskAKwycgpK2CrQAEIArrZ4tMj6hsbQJvTYyAC2cDj4rp5eHhS+QfIgisqqADIRZInARoIpaZnZTnnehcW84npoAHzRsfF1DabNWY650ABccNjg4NAAVEvEAJqwK9AAyhnBI8kAogAekPxRwDAZkMCYiBS8HojH0PB2mKqIWpEx+MOwBnqyVS6QmORcsxW602SxSAB0CNBpEgvrNtvV8JwADQI6DQbBUGioNEYrhYvG4pFRDysfgAfVs9nmswAkiocYiQB56fwcHg4uASW8uAjnI9ntBEAA3PSDP50AFJRoglqTCF4lYsiKwaAABQEAGsbls2EiaLIaBRoLdsKp8PxwFEKLR8dBzuxEFl2PAooIojRlksNG8tBYtuKXtLZb84grAaMmqDWrlIUHNKGtgBvSkE6jxDl45GIL6U6TU2kMux4eYIgC+vDlsYSiqByvGyZc0H66nTuhELYT5isNirHecaMgeCtmu1esNxthEclMpEwe0fYOyss1ngjIc4PHeLxABFaJp5iAAF4wGc6-X8I3ALZhCiUo+QY6t1S3G9pkNh2FvV9YAlyjVdez0AdgW3Ed7DHWYj0QpCjwAJSiAgViLfh4jpIsvhMTCUS0IVMXJMsaTKSsmUFHZSU4FZnBWXEhGgFdtAsa1MBgQhJEQaBiDwRAAHcoAoTgYF1IiADpoBQm5-QwpZ6iiSATW+PDvlNKULwockWAkQNfHACQVlAlcexDDcoK3Ydd1HNVDyPSgrR-Vje34W0QAMV5aCicBgARfBON-LUdTIB9BJEyAxMga4VC2N9kK+YLA1CucHwXXhuDXHRIPjaDbL3McuwGGN-nytskwcicp2gDxDVS2d70fUzuCeSNzMbcqlTGKqDwQ5DUJuN5IBlNzLI80BvKJPyAoILQkCyW90papYAHIEkNSLRPEuLVDM6MhjjHrE1Vfq5gWVLuXCg1tui8TiAsfgtmuW57mtRBEsGo8hKYS5WHYFLcyJZAZIRbZsDG1zgeGILXOs4ANugdhbUgXhqlqBHTrBNoSq646v2x+CLsWFYzDIbY6WhQ5jy2XZ9ixgBFFT4A4gBZG47lfREkJY3kzgNaBtBS-Ay1UGG6FNX7mABy4HjaiUoC0T5vnx5sKt6s62lTcnKep2nYRMHNCXiEiRRcA6RDVzdNZxlNoEqYtBa0YQUpoABHFT2Gi-ETclgh4Y1pGUcuBsyoJwd2wckqMZtonqtk+T4EUgAiCWElNaFopTtTfbzVBKVNZEz3COGuJt4PgFRvTjMgRKaGABTAzTv2M4SAA5AB5AAVfiNmzlYgA)
 
-============ Setup Wasm
+## Installation and Setup 
 
-1. git clone https://github.com/CosmWasm/wasmd.git
-2. cd wasmd && git checkout v0.30.0
-3. make install
+### Install and Setup Hypersign Blockchain Node
 
-
-============ Hermese
-
-Hermes binary link: https://github.com/informalsystems/hermes/releases/download/v1.3.0/hermes-v1.3.0-x86_64-apple-darwin.tar.gz
-
-tar -xvzf hermes-v1.3.0-x86_64-apple-darwin.tar.gz
-
-sudo mv hermes /usr/local/bin/
-
-setup config.toml 
-
-mv ./configs/hermes/config.toml ~/.hermes/config.toml
-
-
-
-
-## Accounts setup for hermes 
-Hypersign side
-
-hidnode.json
-```json
-{
-    "name": "wallet1",
-    "type": "local",
-    "address": "hid1j2e7r2ktl70e2jgy36g85prkwtr52rzdlasp04",
-    "pubkey": "{\"@type\":\"/cosmos.crypto.secp256k1.PubKey\",\"key\":\"A/iKWLEHCK0Fta6L73HDkAlGfRoeuFcaKf+owemsprF+\"}",
-    "mnemonic": "soap ordinary know hollow volcano great sample slot gadget embark sure inspire medal neither identify endless debate later art list large spin work fashion"
-}
-
-```
-
-wasmd.json
-```
-
-```
-Add keys 
+**Install `hid-noded` binary** 
 
 ```bash
+git clone https://github.com/hypersign-protocol/hid-node.git
+
+cd hid-node && git checkout cosmwasm-integration
+
+make install (or -> make build && sudo mv ./build/hid-noded /usr/local/bin)
+```
+
+**Setup `hid-noded` local blockchain network**
+
+```bash
+cd config/hypersign
+sh ./localnet.sh
+```
+
+**Run Hypersign blockchain**
+
+```bash
+hid-noded start
+```
+
+The Hypersign blockchain will run on:  
+- RPC port `:36657`
+- REST port `:2317`
+
+### Install and Setup Wasm Blockchain Node
+
+**Install `wasmd` binary** 
+```bash
+git clone https://github.com/CosmWasm/wasmd.git
+cd wasmd && git checkout v0.30.0
+make install
+```
+**Setup `wasmd` local blockchain network**
+
+```bash
+cd config/wasm
+sh ./localnet.sh
+```
+
+**Run Wasm blockchain**
+
+```bash
+wasmd start
+```
+
+The Wasm blockchain will run on:  
+- RPC port `:26657`
+- REST port `:1317`
+
+### Install and Setup Hermes relayer
+
+#### Install `hermes` binary
+
+```bash
+wget https://github.com/informalsystems/hermes/releases/download/v1.3.0/hermes-v1.3.0-x86_64-apple-darwin.tar.gz 
+tar -xvzf hermes-v1.3.0-x86_64-apple-darwin.tar.gz
+sudo mv hermes /usr/local/bin/
+```
+#### Setup configuration
+```bash
+mv ./configs/hermes/config.toml ~/.hermes/config.toml
+```
+#### Accounts setup for hermes
+
+**Adding keys for Hypersign account**
+
+```bash
+cd config/hermes
 hermes keys add --key-file ./hidnode.json --chain hidnode
 ```
 
+**Adding keys for wasm account**
+
 ```bash
+cd config/hermes
 hermes keys add --key-file ./wasmdnode.json --chain wasmdnode
 ```
+#### Funding these wallets
 
-
-Fund these wallets
+**Fund Hermes' hypersign's account**
 
 ```bash
 hid-noded tx bank send $(hid-noded keys show node1 -a --keyring-backend test) hid1j2e7r2ktl70e2jgy36g85prkwtr52rzdlasp04 1000000uhid --broadcast-mode block  --keyring-backend test --chain-id hidnode --yes --node tcp://localhost:36657
 
 ```
 
+**Fund Hermes' wasm's account**
 ```bash
 wasmd tx bank send $(wasmd keys show node1 -a --keyring-backend test) wasm1pgs6qw5dwaghrvkvu6fk42tfmft6vh79jdysfy 1000000uwasm --broadcast-mode block  --keyring-backend test --chain-id wasmdnode --yes 
 ```
 
-wasmd keys add asd
+### Creating connection between Hypersign and Wasm nodes
 
-wasmd tx bank send $(wasmd keys show node1 -a --keyring-backend test) wasm1zhu379dw7sh8q077c5eug704splh3qu8s07gtj 1000000uwasm --broadcast-mode block  --keyring-backend test --chain-id wasmdnode --yes  
-
-wasmd q bank balances wasm1tgvec6zd0j5t7y4qtj902wtgxjkm6w96zt5da4 
-
-
-## connection /
-
-```
---- Client 
-    |
-     -- Connections 
-        |
-         -- Channels [ports]
-```
-
-creating connection : 
 
 ```bash
 hermes create connection --a-chain wasmdnode --b-chain hidnode
