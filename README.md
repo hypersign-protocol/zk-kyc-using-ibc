@@ -287,7 +287,7 @@ data:
 
 Its not! reason being, hermes automatically not pushing the packets to hypersign (except for rare situation) so we need to manually ask hermes to push the packets to hypersign.
 
-## Hermes push packets
+## Hermes push packets manually
 
 Hermes pushing packets to hypersign and receiving ack from hypersign and pushing it back to business chain
 
