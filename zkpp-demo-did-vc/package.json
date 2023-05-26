@@ -1,0 +1,20 @@
+{
+  "name": "zkp-demo-did-vc-vp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@iden3/js-crypto": "^1.0.0-beta.1",
+    "bip39": "^3.1.0",
+    "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "jcs": "git+https://github.com/hypersign-protocol/JCS.git",
+    "multibase": "^4.0.6",
+    "snarkjs": "^0.6.11"
+  }
+}
