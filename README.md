@@ -152,7 +152,7 @@ The circuit goes through bunch of checks like, `data integrity check`, `issuer s
 
 ## Cross-Chain zk-Proof Verification using IBC Query (ICQ)
 
-IBC Query (ICQ) is specialzed IBC transaction which is used specifically for quering data over IBC. We used ICQ to get the proof verification result from Hypersign chain to the service provider chain where whitelist pool contract is deployed. The ICQ transaction worke with a realyer - we used [Hermes](/docs/hermes.md) for this purpose. This is nothing but smart contrac to smart contract interaction over IBC. 
+IBC Query (ICQ) is specialzed IBC transaction which is used specifically for quering data over IBC. We used ICQ to get the proof verification result from Hypersign chain to the service provider chain where whitelist pool contract is deployed. The ICQ transaction work with a realyer - we used [Hermes](/docs/hermes.md) for this purpose. This is nothing but smart contrac to smart contract interaction over IBC. 
 
 ![img](https://user-images.githubusercontent.com/15328561/199429349-0cd046da-d17a-4931-89ef-5ffdcdddf13f.png) 
 
