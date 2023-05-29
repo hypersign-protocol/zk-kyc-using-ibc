@@ -1,6 +1,6 @@
-# Introduction 
+# Cross-Chain privacy preserving KYC using Zero knowledge proof (zkp) and Interblockchain Communication (IBC) for Cosmos
 
-## Cross-Chain privacy preserving KYC using Zero knowledge proof (zkp) and Interchain Communication (IBC) for Cosmos
+### Introduction 
 
 One of the reason people have always been skeptical to use Web3 or Blockchain technology (including cyrpto currencies), is that lack of regulations. Partly because, cryptocurrency usecase is very tightly coupled with this tech stack. There has always been a push back from regulatory bodies citing issues like money laundering and terror financing. Lately, many government bodies have understood that banning this usecase or the tech itself, is not the right solution to solve those problems. Instead, working on proper law and regulations which not only solve the above state problems but solve them in web3 way - with atmost privacy, data security and data ownership. Markets in Crypto-Assets (MiCA) being one such regulatory body of European Union (EU) has voted for the [law](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3725395) that allows providers of digital wallets and other crypto services to sell their products across the EU, if they register with national authorities. Which paves the way for usecases like [regulated token launches](https://news.law.fordham.edu/jcfl/2023/02/06/an-overview-of-the-eu-crypto-asset-regulatory-framework-mica/), identity based voting in DAOs (Vitalik's blog -  [ Moving beyon coin voting governance](https://vitalik.ca/general/2021/08/16/voting3.html)), [NFT Identity](https://delphilabs.notion.site/NFT-Identity-5a6c1afdce6646d6b21f1184502ae039) etc. 
 
@@ -10,7 +10,7 @@ Technically, token is nothing but a smart contract deployed on the blockchain ne
 
 ### The Solution
 
-**Zero Knowledge Proof and Verifiable Credential**
+**Zero Knowledge Proof and Self Sovereign Identity**
 
 Advance cryptographic technology like zero knowledge proof (zkp) can help solve this problem by producing complex mathematical computational proof which can not only be sent to (and verified by) smart contract but also does not reveal any private information about the user. Marring zkp with Self sovereign identity (tech like decentralised identifier (DID) and verifiable credentials (VP)) brings "identity" to the zk stack making the entire system trust worthy and zk-based digital interaction more secure and seamless. 
 
@@ -18,18 +18,119 @@ A verifiable credential (VC with KYC data) may be issued to a user (controlling 
 
 **No just on-chain and multichain, cross-chain is the need**
 
-For this system to scale, it has to be _"cross-chain"_. Cosmos, being a network of blockchains, which support application specific chains and has features like Interblockchain communication (IBC) for communication between these appchains, needs a system to verify these zk-proofs over IBC so that other app chain do not have to implement zero knowledge proofs contracts or have to deal with DID/VC infrastrcuture.  This overloads a lot of work, realted to zk and ssi, from app chains which help them focus on their business case. All they need to do is, enable the IBC communication on their chain.
+For this system to scale, it has to be _"cross-chain"_. Cosmos, being a network of blockchains, which support application specific chains and has features like Interblockchain communication (IBC) for communication between these appchains, needs a system to verify these zk-proofs over IBC so that other app chain do not have to implement zero knowledge proofs contracts or have to deal with DID/VC infrastrcuture.  This offloads a lot of work, realted to zk and ssi, from app chains which help them focus on their business case. All they need to do is, enable the IBC communication on their chain.
 
 # Demo 
 
+In this demo we want to demonstrate that, how a user may whitelists his wallet or DID to a whitelisting pool contract - deployed on any cosmos SDK based chain having wasm support using IBC. This whitelisting pool contract then may be used as a KYCed user database for other usecases like Airdrops, LBA, DeX etc.
 
-## High level architecture
+> User wants to prove that he/she does not belong to excluded list of countries - that he/she is not part of this exclusion list and hence his/her wallet/DID should be whitelisted.
+
+At high level, these are the steps: 
+
+-  **Credential Issuance**: Upon user's request, issuer issues a verifiable credential to the user. 
+-  **zk-Proof generation from verifiable presentation**: When requested (by whitelist pool smart contract, deployed on service provier chain), the user generates the zk-proof locally in his brower using verifiable presentation and submits to the contract.
+-  **zk-Proof verification over IBC from Hypersign chain**: The whitelist pool smart contract then ask zk-verifier contract, deployed on Hypersign chain, to verify the zk-proof over IBC. Upon succesful verification, the user wallet/DID gets whitelisted in whitelist pool smart contract
 
 ![high-level](https://user-images.githubusercontent.com/15328561/241242630-9870a6c7-7c9f-4a0e-bbeb-88314b31372e.png)
 
+## Credential Issuance 
+
+> Note: Pre-requisite: User and Issuer both have already generated their DID on Hypersign chain.
+
+Let's us say, user submits the following data to the issuer.
+
+```json
+{
+  "age": 25,
+  "country": "USA",
+  "id": "did:hid:testnet:0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c", 
+  "name": "Alice"
+}
+```
+The issuer "somehow" (out of scope of this demo) verifies the above data and issues a Verifiable credential by signing the Merkle root (`rootHash`) of the `credentialSubject`. 
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "credentialSubject": {
+    "age": "25",
+    "country": "0x557361",
+    "id": "0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c",
+    "name": "0x416c696365"
+  },
+  "rootHash": "f807b5f05b8b25556649bfe69d49429a8907c609d7b94452c42647f1558d6350",
+  "id": "http://example.edu/credentials/3732",
+  "issuanceDate": 1685344255539,
+  "issuer": "did:hid:testnet:z543717GD36C5VSajKzLALZzcTakhmme2LgC1ywW1YwTM",
+  "type": [
+    "VerifiableCredential",
+    "KYC"
+  ],
+  "proof": {
+    "R8x": "12163938283061799366134189599990949086475820396868725835388367219669658303995",
+    "R8y": "436643934054401353556807930215389640136405290439273428300152067272834082564",
+    "S": "458850281095747919240149124901518278033062703525350866858030900928778944487"
+  }
+}
+```
+
+
 ## zk-Proof generation from Verifiable Presentation
 
+User generates a Verifiable Presentation by signing a `challenge` given by the verifier.
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": "VerifiablePresentation",
+  "vc": {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://www.w3.org/2018/credentials/examples/v1"
+      ],
+      "credentialSubject": {
+        "age": "25",
+        "country": "0x557361",
+        "id": "0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c",
+        "name": "0x416c696365"
+      },
+      "rootHash": "f807b5f05b8b25556649bfe69d49429a8907c609d7b94452c42647f1558d6350",
+      "id": "http://example.edu/credentials/3732",
+      "issuanceDate": 1685344255539,
+      "issuer": "did:hid:testnet:z543717GD36C5VSajKzLALZzcTakhmme2LgC1ywW1YwTM",
+      "type": [
+        "VerifiableCredential",
+        "KYC"
+      ],
+      "proof": {
+        "R8x": "12163938283061799366134189599990949086475820396868725835388367219669658303995",
+        "R8y": "436643934054401353556807930215389640136405290439273428300152067272834082564",
+        "S": "458850281095747919240149124901518278033062703525350866858030900928778944487"
+      }
+    },
+    "proof": {
+      "signature": {
+        "R8x": "12163938283061799366134189599990949086475820396868725835388367219669658303995",
+          "R8y": "436643934054401353556807930215389640136405290439273428300152067272834082564",
+          "S": "458850281095747919240149124901518278033062703525350866858030900928778944487"
+      },
+      "verificationMethodId": "0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c",
+      "challenge": 12342313
+    }
+}
+```
+The Verifiable presentation along with list of countries where exclusion (user should not belongs this list) has to proved and other private inputs to our circuit. 
+
 ![zk-kyc-attribute-membership-circuit](https://user-images.githubusercontent.com/15328561/241242635-9a06fb8b-a8ee-4550-94a5-fa0be448e848.jpg)
+
+The circuit goes through bunch of checks like, `data integrity check`, `issuer signature checks`, `user's signature check`,`membership check` etc and produces `zk-proof` and `public signals`. The public signal contains either `0` or `1`. `0` is this users is not part the exculded country list and `1` is otherwise. 
 
 
 ## Cross-Chain zk-Proof Verification using IBC Query
@@ -117,6 +218,7 @@ data:
 - [ ] Improve the kyc zk circuit
 - [ ] Figure out why Hermese is not pushing the packets automatically
 - [ ] Figure out module to smart contract intraction (same chain as well as interchain)
+- [ ] How smart contract produce a challenge which can be signed by user?
 
 
 
