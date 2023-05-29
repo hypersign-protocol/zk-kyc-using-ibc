@@ -1,7 +1,10 @@
-nvm use 14.21
 
-npm install
+## Steps to run
 
-sh run.sh 
+`nvm use 14.21`
 
-node src/index.js
+`npm install`
+
+`sh run.sh `
+
+`node src/index.js`
