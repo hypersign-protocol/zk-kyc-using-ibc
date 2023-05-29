@@ -148,7 +148,7 @@ The circuit goes through bunch of checks like, `data integrity check`, `issuer s
 
 ### Setting up zkp circuit and generating verifiable presentation
 
-[Follow this documentation](/zkpp-demo-did-vc/README.md)
+[Follow this documentation](/zkp/README.md)
 
 ## Cross-Chain zk-Proof Verification using IBC Query
 
