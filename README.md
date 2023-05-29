@@ -89,8 +89,9 @@ User generates a Verifiable Presentation by signing a `challenge` given by the v
     "https://www.w3.org/2018/credentials/v1",
     "https://www.w3.org/2018/credentials/examples/v1"
   ],
-  "type": "VerifiablePresentation",
-  "vc": {
+  "type": [ "VerifiablePresentation" ],
+  "verifiableCredential": [
+    {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
         "https://www.w3.org/2018/credentials/examples/v1"
@@ -99,77 +100,99 @@ User generates a Verifiable Presentation by signing a `challenge` given by the v
         "age": "25",
         "country": "0x557361",
         "id": "0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c",
-        "name": "0x416c696365"
+        "name": "0x507261746170204d7269646861"
       },
       "rootHash": "f807b5f05b8b25556649bfe69d49429a8907c609d7b94452c42647f1558d6350",
       "id": "http://example.edu/credentials/3732",
-      "issuanceDate": 1685344255539,
+      "issuanceDate": 1685346063440,
       "issuer": "did:hid:testnet:z543717GD36C5VSajKzLALZzcTakhmme2LgC1ywW1YwTM",
       "type": [
         "VerifiableCredential",
         "KYC"
       ],
       "proof": {
-        "R8x": "12163938283061799366134189599990949086475820396868725835388367219669658303995",
-        "R8y": "436643934054401353556807930215389640136405290439273428300152067272834082564",
-        "S": "458850281095747919240149124901518278033062703525350866858030900928778944487"
+        "type": "BabyJubJubSignature2021",
+        "credentialHash": "8804781371345579570033420413972109558958830340519668977613039209476413357007",
+        "created": 1685346064774,
+        "verificationMethod": "did:hid:testnet:z543717GD36C5VSajKzLALZzcTakhmme2LgC1ywW1YwTM#key-1",
+        "proofValue": {
+          "R8x": "683841881763791128752872915676462173916887923648823414160160391436784188064",
+          "R8y": "17173979429575543432010350417565880360926574124383324745680518501585575713613",
+          "S": "1742062914709679048193182798105485403319056250146959691115025294992925267680"
+        },
+        "proofPurpose": "assertionMethod"
       }
-    },
-    "proof": {
-      "signature": {
-        "R8x": "12163938283061799366134189599990949086475820396868725835388367219669658303995",
-          "R8y": "436643934054401353556807930215389640136405290439273428300152067272834082564",
-          "S": "458850281095747919240149124901518278033062703525350866858030900928778944487"
-      },
-      "verificationMethodId": "0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c",
-      "challenge": 12342313
     }
+  ],
+  "proof": {
+    "type": "BabyJubJubSignature2021",
+    "created": 1685346067490,
+    "proofPurpose": "authentication",
+    "verificationMethod": "did:hid:testnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj#key-1",
+    "challenge": "123456",
+    "proofValue": {
+      "R8x": "2561850963774026906369122268554600740848407830063412592471185456413796082293",
+      "R8y": "2102349270547407034807811296621127114422616298236933684247877651948314268415",
+      "S": "2182387849842233664426242497656858314792124699911044877720633460859100800189"
+    }
+  }
 }
 ```
-The Verifiable presentation along with list of countries where exclusion (user should not belongs this list) has to proved and other private inputs to our circuit. 
 
-![zk-kyc-attribute-membership-circuit](https://user-images.githubusercontent.com/15328561/241242635-9a06fb8b-a8ee-4550-94a5-fa0be448e848.jpg)
+The Verifiable presentation along with list of countries where exclusion (user should not belongs this list) has to proved and other private inputs are sent to the circuit for proof generation
 
-The circuit goes through bunch of checks like, `data integrity check`, `issuer signature checks`, `user's signature check`,`membership check` etc and produces `zk-proof` and `public signals`. The public signal contains either `0` or `1`. `0` is this users is not part the exculded country list and `1` is otherwise. 
+![zk-kyc-attribute-membership-circuit](https://user-images.githubusercontent.com/15328561/241677934-429f17c7-7dcd-4703-be67-284554d7238d.png)
 
 
-## Cross-Chain zk-Proof Verification using IBC Query
+The circuit goes through bunch of checks like, `data integrity check`, `issuer signature checks`, `user's signature check`,`membership check` etc and produces `zk-proof` and `public signals`. The public signal contains either `0` or `1`. `0` if this users is not part the exculded country list and `1` if otherwise. 
+
+### Setting up zkp circuit and generating verifiable presentation
+
+[Follow this documentation](/zkpp-demo-did-vc/README.md)
+
+## Cross-Chain zk-Proof Verification using IBC Query (ICQ)
+
+IBC Query (ICQ) is specialzed IBC transaction which is used specifically for quering data over IBC. We used ICQ to get the proof verification result from Hypersign chain to the service provider chain where whitelist pool contract is deployed. The ICQ transaction worke with a realyer - we used [Hermes](/docs/hermes.md) for this purpose. This is nothing but smart contrac to smart contract interaction over IBC. 
 
 ![img](https://user-images.githubusercontent.com/15328561/199429349-0cd046da-d17a-4931-89ef-5ffdcdddf13f.png) 
+
+The user sbumits the proof to the service provider chain, Hermes relays this proof to the verifier contract deployed on Hypersign chain. The verifier contract then verifies the proof and returns `true` or `false`. Hermes finally, relayes this verification result as acknowledgment to the service provider chain.
+
+The sequence digram for ICQ inteaction is as follows:
 
 ![ss](https://user-images.githubusercontent.com/15328561/241242624-ddb0cfd8-ba08-471a-a609-2b19e48d5b8f.png)
 
 
 - [sequence diagram src](https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGECcD2BnZBaWALAhiAdtAFoDS0AggCYXySrQDqmYk4IyoeA5gFDfYDGwRPGgBVZJHjcADtnih+IWXmDQAapJAAzEJLiIV8AaoAUACQCe0ychCcCWXHgCU0AMQAjAJxbskAKwycgpK2CrQAEIArrZ4tMj6hsbQJvTYyAC2cDj4rp5eHhS+QfIgisqqADIRZInARoIpaZnZTnnehcW84npoAHzRsfF1DabNWY650ABccNjg4NAAVEvEAJqwK9AAyhnBI8kAogAekPxRwDAZkMCYiBS8HojH0PB2mKqIWpEx+MOwBnqyVS6QmORcsxW602SxSAB0CNBpEgvrNtvV8JwADQI6DQbBUGioNEYrhYvG4pFRDysfgAfVs9nmswAkiocYiQB56fwcHg4uASW8uAjnI9ntBEAA3PSDP50AFJRoglqTCF4lYsiKwaAABQEAGsbls2EiaLIaBRoLdsKp8PxwFEKLR8dBzuxEFl2PAooIojRlksNG8tBYtuKXtLZb84grAaMmqDWrlIUHNKGtgBvSkE6jxDl45GIL6U6TU2kMux4eYIgC+vDlsYSiqByvGyZc0H66nTuhELYT5isNirHecaMgeCtmu1esNxthEclMpEwe0fYOyss1ngjIc4PHeLxABFaJp5iAAF4wGc6-X8I3ALZhCiUo+QY6t1S3G9pkNh2FvV9YAlyjVdez0AdgW3Ed7DHWYj0QpCjwAJSiAgViLfh4jpIsvhMTCUS0IVMXJMsaTKSsmUFHZSU4FZnBWXEhGgFdtAsa1MBgQhJEQaBiDwRAAHcoAoTgYF1IiADpoBQm5-QwpZ6iiSATW+PDvlNKULwockWAkQNfHACQVlAlcexDDcoK3Ydd1HNVDyPSgrR-Vje34W0QAMV5aCicBgARfBON-LUdTIB9BJEyAxMga4VC2N9kK+YLA1CucHwXXhuDXHRIPjaDbL3McuwGGN-nytskwcicp2gDxDVS2d70fUzuCeSNzMbcqlTGKqDwQ5DUJuN5IBlNzLI80BvKJPyAoILQkCyW90papYAHIEkNSLRPEuLVDM6MhjjHrE1Vfq5gWVLuXCg1tui8TiAsfgtmuW57mtRBEsGo8hKYS5WHYFLcyJZAZIRbZsDG1zgeGILXOs4ANugdhbUgXhqlqBHTrBNoSq646v2x+CLsWFYzDIbY6WhQ5jy2XZ9ixgBFFT4A4gBZG47lfREkJY3kzgNaBtBS-Ay1UGG6FNX7mABy4HjaiUoC0T5vnx5sKt6s62lTcnKep2nYRMHNCXiEiRRcA6RDVzdNZxlNoEqYtBa0YQUpoABHFT2Gi-ETclgh4Y1pGUcuBsyoJwd2wckqMZtonqtk+T4EUgAiCWElNaFopTtTfbzVBKVNZEz3COGuJt4PgFRvTjMgRKaGABTAzTv2M4SAA5AB5AAVfiNmzlYgA)
 
-## Installation and Setup 
+### Installation and Setup 
 
-### Install and Setup Hypersign Blockchain Node
+#### Install and Setup Hypersign Blockchain Node
 
 [Documentation](/docs/hypersign.md)
 
-### Install and Setup Wasm Blockchain Node
+#### Install and Setup Wasm Blockchain Node
 
 [Documentation](/docs/wasmd.md)
 
-### Install and Setup Hermes relayer
+#### Install and Setup Hermes relayer
 
 [Documentation](/docs/hermes.md)
 
-### Smart Contract
+#### Smart Contract
 
 - [Build, upload and instantiate](/docs/contract.md#on-hypersign-chain) verifier contract on Hypersign chain. Contract address: `hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7`
 - [Build, upload and instantiate](/docs/contract.md#on-wasmd-chain) whitelisting pool contract (business contract) on Wasmd chain. Contract address: `wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d`
 
-### IBC channel creation 
+#### IBC channel creation 
 
 [Documentation](/docs/hermes.md#creating-channel-between-hypersign-and-wasm-nodes)
 
-### Finally start the hermes
+#### Finally start the hermes
 
 [Documentation](/docs/hermes.md#finally-start-the-hermes)
 
-## Cross chain contract interaction 
+## Smart contract Demo
 
 ### Lets's do the KYC on business contract
 
@@ -210,6 +233,9 @@ Once you push the packet, query `has_kyced` function once again to see if the wa
 data:
   result: address is KYCed
 ```
+
+## Video Demo
+
 
 ## Todo(s)
 
