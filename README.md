@@ -20,107 +20,15 @@
 
 ### Install and Setup Hypersign Blockchain Node
 
-**Install `hid-noded` binary** 
-
-```bash
-git clone https://github.com/hypersign-protocol/hid-node.git
-
-cd hid-node && git checkout cosmwasm-integration
-
-make install (or -> make build && sudo mv ./build/hid-noded /usr/local/bin)
-```
-
-**Setup `hid-noded` local blockchain network**
-
-```bash
-cd config/hypersign
-sh ./localnet.sh
-```
-
-**Run Hypersign blockchain**
-
-```bash
-hid-noded start
-```
-
-The Hypersign blockchain will run on:  
-- RPC port `:36657`
-- REST port `:2317`
+[Documentation](/docs/hypersign.md)
 
 ### Install and Setup Wasm Blockchain Node
 
-**Install `wasmd` binary** 
-```bash
-git clone https://github.com/CosmWasm/wasmd.git
-cd wasmd && git checkout v0.30.0
-make install
-```
-**Setup `wasmd` local blockchain network**
-
-```bash
-cd config/wasm
-sh ./localnet.sh
-```
-
-**Run Wasm blockchain**
-
-```bash
-wasmd start
-```
-
-The Wasm blockchain will run on:  
-- RPC port `:26657`
-- REST port `:1317`
+[Documentation](/docs/wasmd.md)
 
 ### Install and Setup Hermes relayer
 
-#### Install `hermes` binary
-
-```bash
-wget https://github.com/informalsystems/hermes/releases/download/v1.3.0/hermes-v1.3.0-x86_64-apple-darwin.tar.gz 
-tar -xvzf hermes-v1.3.0-x86_64-apple-darwin.tar.gz
-sudo mv hermes /usr/local/bin/
-```
-#### Setup configuration
-```bash
-mv ./configs/hermes/config.toml ~/.hermes/config.toml
-```
-#### Accounts setup for hermes
-
-**Adding keys for Hypersign account**
-
-```bash
-cd config/hermes
-hermes keys add --key-file ./hidnode.json --chain hidnode
-```
-
-**Adding keys for wasm account**
-
-```bash
-cd config/hermes
-hermes keys add --key-file ./wasmdnode.json --chain wasmdnode
-```
-#### Funding these wallets
-
-**Fund Hermes' hypersign's account**
-
-```bash
-hid-noded tx bank send $(hid-noded keys show node1 -a --keyring-backend test) hid1j2e7r2ktl70e2jgy36g85prkwtr52rzdlasp04 1000000uhid --broadcast-mode block  --keyring-backend test --chain-id hidnode --yes --node tcp://localhost:36657
-
-```
-
-**Fund Hermes' wasm's account**
-```bash
-wasmd tx bank send $(wasmd keys show node1 -a --keyring-backend test) wasm1pgs6qw5dwaghrvkvu6fk42tfmft6vh79jdysfy 1000000uwasm --broadcast-mode block  --keyring-backend test --chain-id wasmdnode --yes 
-```
-
-### Creating connection between Hypersign and Wasm nodes
-```bash
-hermes create connection --a-chain wasmdnode --b-chain hidnode
-```
-
-
-Next we have to create the channel, but before that let's deploy our zk-verifier contract on hypersign and business  (whitelisting pool) contract on wasm blockchain.
+[Documentation](/docs/hermes.md)
 
 ## Smart Contract
 
@@ -296,5 +204,7 @@ hermes clear packets --chain wasmdnode --port wasm.wasm14hj2tavq8fpesdwxxcu44rty
 ```
 
 Once you push the packet, query `has_kyced` function once again to see if the wallet is whitelisted. 
+
+
 
 
