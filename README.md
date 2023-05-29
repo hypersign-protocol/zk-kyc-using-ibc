@@ -146,7 +146,7 @@ User generates a Verifiable Presentation by signing a `challenge` given by the v
 }
 ```
 
-The Verifiable presentation along with list of countries where exclusion (user should not belongs this list) has to proved and other private inputs are sent to the circuit for proof generation
+The Verifiable presentation along with list of countries where exclusion (user should not belongs this list) has to proved and other private inputs are sent to the [circuit](/zkp/Hypersign_circuits/vp.circom) for proof generation
 
 ![zk-kyc-attribute-membership-circuit](https://user-images.githubusercontent.com/15328561/241677934-429f17c7-7dcd-4703-be67-284554d7238d.png)
 
