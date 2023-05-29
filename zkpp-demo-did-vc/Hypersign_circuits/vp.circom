@@ -27,17 +27,18 @@ template SetMembership(n) {
 
 // verifiable Presentation circuit
 template vp(n_attr,n) {
-    signal input set[n];
+    signal input set[n]; 
     signal input key;
 signal input attributes[n_attr];
-signal input expose_index[n_attr];
 signal output exposed_attributes[n_attr];
+signal output issuer_id_out;
 signal output set_membership_out;
 
  signal input credential_lemma;  // Root of the credential sparse merkle tree
 signal input issuer_pk[2];
 signal input issuer_signature[3]; // Verifiable credential signature
 signal input siblings[10];
+signal input issuer_id;
 component smt=SMTVerifier(10);
 smt.enabled<==1;
 smt.root<==credential_lemma;
@@ -59,33 +60,33 @@ ecdsa.R8y<==issuer_signature[1];
 ecdsa.S<==issuer_signature[2];
 ecdsa.M<==credential_lemma;
 
-for (var i = 0; i < n_attr; i++)
-{
-    exposed_attributes[i] <== attributes[i];
-}
 
+exposed_attributes[2] <== attributes[2];
 
+issuer_id_out<==issuer_id;
 component set_membership=SetMembership(n);
 set_membership.x<==attributes[1];
 set_membership.set<==set;
 set_membership_out<==set_membership.out;
 
-log(set_membership_out);
 
 
 
-// signal input challenge;
-// signal input holder_pk[2];
-// signal input holder_signature[3]; // Verifiable presentation signature
+signal input challenge;
+signal input holder_pk[2];
+signal input holder_signature[3]; // Verifiable presentation signature
 
 
-// signal output valid_credential;
-// signal output valid_presentation;
-// signal output valid_vp;
+// verify the holder signature
+component ecdsaH=EdDSAPoseidonVerifier();
 
-
-
-
+ecdsaH.enabled<==1;
+ecdsaH.Ax<==holder_pk[0];
+ecdsaH.Ay<==holder_pk[1];
+ecdsaH.R8x<==holder_signature[0];
+ecdsaH.R8y<==holder_signature[1];
+ecdsaH.S<==holder_signature[2];
+ecdsaH.M<==challenge;
 
 
 }

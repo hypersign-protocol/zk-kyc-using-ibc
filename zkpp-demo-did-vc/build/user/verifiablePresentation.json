@@ -1,0 +1,54 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "verifiableCredential": [
+    {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://www.w3.org/2018/credentials/examples/v1"
+      ],
+      "credentialSubject": {
+        "age": "25",
+        "country": "0x557361",
+        "id": "0x6bcc19d6dc56257574f8b347824bef8f58b38605a76313271e67b0ff4405391c",
+        "name": "0x507261746170204d7269646861"
+      },
+      "id": "http://example.edu/credentials/3732",
+      "issuanceDate": 1685348007791,
+      "issuer": "did:hid:testnet:z543717GD36C5VSajKzLALZzcTakhmme2LgC1ywW1YwTM",
+      "type": [
+        "VerifiableCredential",
+        "KYC"
+      ],
+      "proof": {
+        "type": "BabyJubJubSignature2021",
+        "rootHash": "8804781371345579570033420413972109558958830340519668977613039209476413357007",
+        "created": 1685348009137,
+        "verificationMethod": "did:hid:testnet:z543717GD36C5VSajKzLALZzcTakhmme2LgC1ywW1YwTM#key-1",
+        "proofValue": {
+          "R8x": "683841881763791128752872915676462173916887923648823414160160391436784188064",
+          "R8y": "17173979429575543432010350417565880360926574124383324745680518501585575713613",
+          "S": "1742062914709679048193182798105485403319056250146959691115025294992925267680"
+        },
+        "proofPurpose": "assertionMethod"
+      }
+    }
+  ],
+  "proof": {
+    "type": "BabyJubJubSignature2021",
+    "created": 1685348009137,
+    "proofPurpose": "authentication",
+    "verificationMethod": "did:hid:testnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj#key-1",
+    "challenge": "123456",
+    "proofValue": {
+      "R8x": "2561850963774026906369122268554600740848407830063412592471185456413796082293",
+      "R8y": "2102349270547407034807811296621127114422616298236933684247877651948314268415",
+      "S": "2182387849842233664426242497656858314792124699911044877720633460859100800189"
+    }
+  }
+}

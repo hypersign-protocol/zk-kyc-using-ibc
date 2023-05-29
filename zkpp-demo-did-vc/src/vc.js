@@ -1,7 +1,8 @@
 const { JCS } = require('jcs')
 const SMT = require('circomlibjs').newMemEmptyTrie
 const ffjavascript = require('ffjavascript')
-const { newMemEmptyTrie } = require('circomlibjs')
+const { newMemEmptyTrie } = require('circomlibjs');
+const { convertPublicKeyMultibase2Hex } = require('./utils');
 
 const buildEddsa = require("circomlibjs").buildEddsa;
 const buildBabyjub = require("circomlibjs").buildBabyjub;
@@ -41,15 +42,15 @@ const generateCredential = async (issuerID, credentialSubject) => {
 }
 
 const generateTree = async (credential) => {
-    const F=(await buildBabyjub()).F
+    const F = (await buildBabyjub()).F
 
     const credentialSubject = credential.credentialSubject
-    
 
-    Object.keys(credentialSubject).forEach((key) => {
+
+    Object.keys(credentialSubject).forEach(async (key) => {
         if (key == "id") {
-            
-            credentialSubject[key] =   credentialSubject[key]
+            credentialSubject[key] = '0x' + await convertPublicKeyMultibase2Hex(credentialSubject[key].split(':')[3])
+         
         } else {
             if (typeof (credentialSubject[key]) == 'number') {
                 credentialSubject[key] = BigInt(credentialSubject[key])
@@ -79,22 +80,29 @@ const generateTree = async (credential) => {
 }
 
 
-const issueCredential = async (credentialHash, privateKey) => {
-    const babyJub=   await buildBabyjub()
+const issueCredential = async (credentialHash, privateKey,verificationMethod) => {
+    const babyJub = await buildBabyjub()
     const eddsa = await buildEddsa()
     const F = babyJub.F;
-    const pvk=Buffer.from(privateKey,'hex')
-const msg=F.e(credentialHash,10)
+    const pvk = Buffer.from(privateKey, 'hex')
+    const msg = F.e(credentialHash, 10)
     const signature = eddsa.signPoseidon(pvk, msg)
-    const Proof={
-        R8x:F.toObject(signature.R8[0]),
-        R8y:F.toObject(signature.R8[1]),
-        S:signature.S
+    const Proof = {
+        type:'BabyJubJubSignature2021',
+        rootHash: credentialHash,
+        created: Number(new Date()),
+        verificationMethod,
+        proofValue: {
+        R8x: F.toObject(signature.R8[0]),
+        R8y: F.toObject(signature.R8[1]),
+        S: signature.S
+        }
+        ,proofPurpose:"assertionMethod"
     }
     return Proof
 }
 
 
 module.exports = {
-    generateCredential, generateTree,issueCredential
+    generateCredential, generateTree, issueCredential
 }
