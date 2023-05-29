@@ -101,6 +101,7 @@ const {
         holder_signature: [verifiablePresentation.proof.proofValue.R8x, verifiablePresentation.proof.proofValue.R8y, verifiablePresentation.proof.proofValue.S],
         issuer_id: '0x' + await convertPublicKeyMultibase2Hex(issuer.id.split(':')[3]),
         credential_lemma: data.rootHash,
+        expose_index:[0,0,1,0]
     }
     , './outputs/vp_js/vp.wasm', './setup/country_0001.zkey');
 

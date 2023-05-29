@@ -5,15 +5,18 @@ include "../circuits/eddsaposeidon.circom";
 include "../circuits/comparators.circom";
 include "../circuits/comparators.circom";
 include "./membership.circom";
+include "../circuits/mux1.circom";
 
 // verifiable Presentation circuit
 template vp(n_attr,n) {
     signal input set[n]; 
     signal input key;
     signal input attributes[n_attr];
+    signal input expose_index[n_attr];
     signal output exposed_attributes[n_attr];
     signal output issuer_id_out;
     signal output set_membership_out;
+
 
     signal input credential_lemma;  // Root of the credential sparse merkle tree
     signal input issuer_pk[2];
@@ -42,8 +45,11 @@ template vp(n_attr,n) {
     ecdsa.R8y<==issuer_signature[1];
     ecdsa.S<==issuer_signature[2];
     ecdsa.M<==credential_lemma;
-    exposed_attributes[2] <== attributes[2];
-    issuer_id_out<==issuer_id;
+
+   
+
+
+
 
     // Membership check
     component set_membership=SetMembership(n);
@@ -63,6 +69,19 @@ template vp(n_attr,n) {
     ecdsaH.R8y<==holder_signature[1];
     ecdsaH.S<==holder_signature[2];
     ecdsaH.M<==challenge;
+
+
+// selective disclosure
+    component mux[n_attr];
+
+    issuer_id_out<==issuer_id;
+    for (var i=0;i<n_attr;i++) {
+        mux[i]=Mux1();
+        mux[i].c[1]<==attributes[i];
+        mux[i].c[0]<==0;
+        mux[i].s<==expose_index[i];
+        exposed_attributes[i]<==mux[i].out;
+    }
 }
 
 
