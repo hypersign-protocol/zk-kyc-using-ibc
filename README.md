@@ -103,66 +103,11 @@ o/p
 
 ## IBC channel creation 
 
-Now we will create channel but before that we need to know ports of these respective contracts: 
+[Documentation](/docs/hermes.md#creating-channel-between-hypersign-and-wasm-nodes)
 
-Port for hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7
+## Finally start the hermes
 
-```bash
-hid-noded q wasm contract hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7
-```
-o/p:
-
-```bash
-address: hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7
-contract_info:
-  admin: ""
-  code_id: "1"
-  created: null
-  creator: hid10yv4f2ure3ygdeq6zeyrkf04hkjemncsfz77u5
-  extension: null
-  ibc_port_id: wasm.hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7
-  label: verifiercontract
-```
-
-Port for wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d
-
-```bash
-wasmd q wasm contract wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d --node tcp://localhost:36657
-```
-o/p: 
-
-```bash
-address: wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d
-contract_info:
-  admin: ""
-  code_id: "1"
-  created:
-    block_height: "818"
-    tx_index: "0"
-  creator: wasm1d8n9csuuk8u3pgffw77sj7j8da8z7z54yn2svx
-  extension: null
-  ibc_port_id: wasm.wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d
-  label: somecontract1
-```
-
-Now we are ready for creating channel using hermes between these two contracts:
-
-
-```bash
-hermes create channel \
-	--a-chain wasmdnode \
-	--a-connection connection-0 \
-	--a-port wasm.wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d \
-	--b-port wasm.hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7 \
-	--order ORDER_UNORDERED \
-	--channel-version 'zk-1'
-```
-
-### Finally start the hermes
-
-```bash
-hermes start
-```
+[Documentation](/docs/hermes.md#finally-start-the-hermes)
 
 ## Cross chain contract interaction 
 
@@ -193,17 +138,18 @@ data:
   result: address is NOT KYCed
 ```
 
-Its not! reason being, hermes automatically not pushing the packets to hypersign (except for rare situation) so we need to manually ask hermes to push the packets to hypersign.
+Its not! reason being, hermes automatically not pushing the packets to hypersign (except for rare situation), so we need to manually ask hermes to push the packets to hypersign and get back the result in business chain in the form of acknoledgement.
 
-## Hermes push packets manually
-
-Hermes pushing packets to hypersign and receiving ack from hypersign and pushing it back to business chain
-
-```bash 
-hermes clear packets --chain wasmdnode --port wasm.wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d --channel channel-0
-```
+[Documentation: Pushing packets manually](/docs/hermes.md#pushing-packets-manually)
 
 Once you push the packet, query `has_kyced` function once again to see if the wallet is whitelisted. 
+
+
+## Todo(s)
+
+- [ ] Deploy the business contract on neutron chain
+- [ ] Connect the whitelisting pool contract with LBA contracts
+- [ ] Improve the kyc zk circuit
 
 
 
