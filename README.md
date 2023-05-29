@@ -30,82 +30,16 @@
 
 [Documentation](/docs/hermes.md)
 
-## Smart Contract
+### Smart Contract
 
-### Building verifier contract on hypersign chain:
+- [Build, upload and instantiate](/docs/contract.md#on-hypersign-chain) verifier contract on Hypersign chain. Contract address: `hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7`
+- [Build, upload and instantiate](/docs/contract.md#on-wasmd-chain) whitelisting pool contract (business contract) on Wasmd chain. Contract address: `wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d`
 
-```bash
-cd verifier-contract
-docker run --rm -v "$(pwd)":/code --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry cosmwasm/rust-optimizer:0.12.6
-```
-
-### Upload verifier contract on hypersign chain:
-
-```bash
-cd verifier-contract
-hid-noded tx wasm store ./artifacts/verifier_contract.wasm --from node1 --keyring-backend test --broadcast-mode block --chain-id hidnode --gas 5628283 --node tcp://localhost:36657
-```
-
-### Instantiate verifier contract on hypersign chain:
-
-```bash
-INIT_ARGS='{}'
-
-hid-noded tx wasm instantiate 1 "$INIT_ARGS" --label "verifiercontract" --from node1 --keyring-backend test --broadcast-mode block --chain-id hidnode --no-admin --node tcp://localhost:36657
-```
-
-o/p
-
-```bash
-...
-...
-- key: _contract_address
-      value: hid14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skm6af7
-...
-...
-```
-
-### Building business contract on wasmd chain:
-
-```bash
-cd business-contract
-docker run --rm -v "$(pwd)":/code --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry cosmwasm/rust-optimizer:0.12.6
-```
-
-
-### Upload business contract on wasmd chain:
-
-```bash
-cd business-contract
-wasmd tx wasm store ./artifacts/business_contract.wasm --from node1 --keyring-backend test --broadcast-mode block --chain-id wasmdnode --gas 5628283 
-```
-
-### Instantiate business contract on wasmd chain:
-
-```bash
-cd business-contract
-INIT_ARGS='{}'
-
-wasmd tx wasm instantiate 1 "$INIT_ARGS" --label "somecontract1" --from node1 --keyring-backend test --broadcast-mode block --chain-id wasmdnode --no-admin 
-```
-
-o/p
-
-```bash
-...
-...
-- key: _contract_address
-      value: wasm14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s0phg4d
-...
-...
-```
-
-
-## IBC channel creation 
+### IBC channel creation 
 
 [Documentation](/docs/hermes.md#creating-channel-between-hypersign-and-wasm-nodes)
 
-## Finally start the hermes
+### Finally start the hermes
 
 [Documentation](/docs/hermes.md#finally-start-the-hermes)
 
@@ -138,11 +72,13 @@ data:
   result: address is NOT KYCed
 ```
 
-Its not! reason being, hermes automatically not pushing the packets to hypersign (except for rare situation), so we need to manually ask hermes to push the packets to hypersign and get back the result in business chain in the form of acknoledgement.
+Its not! 
 
-[Documentation: Pushing packets manually](/docs/hermes.md#pushing-packets-manually)
+Reason being, Hermes automatically not pushing packets to Hypersign (except for rare situations), so we need to manually ask hermes to push the packets to hypersign and get back the result in business chain in the form of acknoledgement.
 
-Once you push the packet, query `has_kyced` function once again to see if the wallet is whitelisted. 
+Lets us [manually push these packets from Hermese CLI](/docs/hermes.md#pushing-packets-manually) and wait for acknoledgement and then try again. 
+
+Once you push the packet, query `has_kyced` function once again to see if the wallet is whitelisted!
 
 
 ## Todo(s)
@@ -150,6 +86,7 @@ Once you push the packet, query `has_kyced` function once again to see if the wa
 - [ ] Deploy the business contract on neutron chain
 - [ ] Connect the whitelisting pool contract with LBA contracts
 - [ ] Improve the kyc zk circuit
+- [ ] Figure out why Hermese is not pushing the packets automatically
 
 
 
