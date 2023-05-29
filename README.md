@@ -249,7 +249,7 @@ data:
 
 ## Credits
 
-We want to thank all those who supported us in anyway, be it technical or non technical. A special thanks to Larry([@larry0x](https://github.com/larry0x/)) for helping us with IBC query part and to [Iden3 team](https://github.com/iden3) for helping us understand how to use zkp with verifiable credentials. 
+We want to thank all those who supported us in anyway, be it technical or non technical. A special thanks to Larry([@larry0x](https://github.com/larry0x/)) for helping us with IBC query part and to [Iden3 team](https://github.com/iden3) for helping us understand how to use zkp with verifiable credentials. Lastly, we also want to give credit to [repo:cw-ibc-queries](https://github.com/JakeHartnell/cw-ibc-queries) by JakeHartnell([@JakeHartnell](https://github.com/JakeHartnell)) from which we took inspiration for IBC query flow.
 
 
 
