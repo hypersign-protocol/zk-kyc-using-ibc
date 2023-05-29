@@ -1,3 +1,28 @@
+# Introduction 
+
+## Cross-Chain privacy preserving KYC using Zero knowledge proof (zkp) and Interchain Communication (IBC) for Cosmos
+
+One of the reason people have always been skeptical to use Web3 or Blockchain technology (including cyrpto currencies), is that lack of regulations. Partly because, cryptocurrency usecase is very tightly coupled with this tech stack. There has always been a push back from regulatory bodies citing issues like money laundering and terror financing. Lately, many government bodies have understood that banning this usecase or the tech itself, is not the right solution to solve those problems. Instead, working on proper law and regulations which not only solve the above state problems but solve them in web3 way - with atmost privacy, data security and data ownership. Markets in Crypto-Assets (MiCA) being one such regulatory body of European Union (EU) has voted for the [law](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3725395) that allows providers of digital wallets and other crypto services to sell their products across the EU, if they register with national authorities. Which paves the way for usecases like [regulated token launches](https://news.law.fordham.edu/jcfl/2023/02/06/an-overview-of-the-eu-crypto-asset-regulatory-framework-mica/), identity based voting in DAOs (Vitalik's blog -  [ Moving beyon coin voting governance](https://vitalik.ca/general/2021/08/16/voting3.html)), [NFT Identity](https://delphilabs.notion.site/NFT-Identity-5a6c1afdce6646d6b21f1184502ae039) etc. 
+
+### The Problem
+
+Technically, token is nothing but a smart contract deployed on the blockchain network. The problem is, how can a smart contract verify that the wallet has KYCed before (or if the user belongs to allowed list of countries?) executing the transfer of tokens, as KYC data are private in nature and it should not be sent to a smart contract. Again KYC being one example of private data, in general we are talking about leveraging "argubly" any private data in the web3 on-chain world.  
+
+### The Solution
+
+**Zero Knowledge Proof and Verifiable Credential**
+
+Advance cryptographic technology like zero knowledge proof (zkp) can help solve this problem by producing complex mathematical computational proof which can not only be sent to (and verified by) smart contract but also does not reveal any private information about the user. Marring zkp with Self sovereign identity (tech like decentralised identifier (DID) and verifiable credentials (VP)) brings "identity" to the zk stack making the entire system trust worthy and zk-based digital interaction more secure and seamless. 
+
+A verifiable credential (VC with KYC data) may be issued to a user (controlling a DID) by a trusted issuer (controlling a DID). The user may then generate Verifiable Presentation (VP) and then use that VP to generate zk-proof which can be sent to a smart contract for verification. This proof does not reveal any private data but only the fact like "user is over 18 yo", "user is a millionair", "user blongs to whitelisted set of contries or has done KYC or not". The smart contract can verifies the proofs of data which was issued only by the trusted issuer easily.  
+
+**No just on-chain and multichain, cross-chain is the need**
+
+For this system to scale, it has to be _"cross-chain"_. Cosmos, being a network of blockchains, which support application specific chains and has features like Interblockchain communication (IBC) for communication between these appchains, needs a system to verify these zk-proofs over IBC so that other app chain do not have to implement zero knowledge proofs contracts or have to deal with DID/VC infrastrcuture.  This overloads a lot of work, realted to zk and ssi, from app chains which help them focus on their business case. All they need to do is, enable the IBC communication on their chain.
+
+# Demo 
+
+
 ## High level architecture
 
 ![high-level](https://user-images.githubusercontent.com/15328561/241242630-9870a6c7-7c9f-4a0e-bbeb-88314b31372e.png)
@@ -80,6 +105,10 @@ Lets us [manually push these packets from Hermese CLI](/docs/hermes.md#pushing-p
 
 Once you push the packet, query `has_kyced` function once again to see if the wallet is whitelisted!
 
+```bash
+data:
+  result: address is KYCed
+```
 
 ## Todo(s)
 
@@ -87,6 +116,7 @@ Once you push the packet, query `has_kyced` function once again to see if the wa
 - [ ] Connect the whitelisting pool contract with LBA contracts
 - [ ] Improve the kyc zk circuit
 - [ ] Figure out why Hermese is not pushing the packets automatically
+- [ ] Figure out module to smart contract intraction (same chain as well as interchain)
 
 
 
