@@ -242,9 +242,9 @@ data:
 ```
 
 ## Video Demo
-[![Watch the video](https://user-images.githubusercontent.com/15328561/246807824-a1d183f5-9b2a-4137-b56b-865ccdfd334a.png)]([https://youtu.be/T-D1KVIuvjA](https://youtu.be/Cz5khx26KHw))
 
 
+[![Demo video](https://user-images.githubusercontent.com/15328561/246810673-1a4bd4f0-953e-4e8e-816f-660c723db870.gif)](https://www.youtube.com/watch?v=Cz5khx26KHw)
 
 
 ## Todo(s)
