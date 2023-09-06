@@ -2,10 +2,8 @@
 const buildEddsa = require("circomlibjs").buildEddsa;
 const buildBabyjub = require("circomlibjs").buildBabyjub;
 const { Hex, PublicKey } = require('@iden3/js-crypto')
-
 const utils_local = require("./mnemonic.js")
 const multibase=require('multibase')
-
 
 const generateKeyPairFromMnemonic = async (mnemonic) => {
     let seed = await utils_local.gnerateFromMnemonic(mnemonic)
@@ -33,8 +31,6 @@ const generateKeyPairFromMnemonic = async (mnemonic) => {
     }
 
 }
-
-
 
 const convertPublicKeyMultibase2Hex=async (publicKeyMultibase)=>{
     const publicKeyHex = multibase.decode(publicKeyMultibase)
@@ -68,10 +64,7 @@ const generateKeyPair = async () => {
         publicKeyXY:publicKeyObj.p
 
     }
-
 }
-
-
 
 module.exports = {
     generateKeyPair, generateKeyPairFromMnemonic,convertPublicKeyMultibase2Hex

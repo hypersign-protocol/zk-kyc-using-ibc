@@ -1,0 +1,27 @@
+{
+  "context": [],
+  "id": "did:hid:devnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj",
+  "alsoKnownAs": [
+    "did:hid:devnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj"
+  ],
+  "controller": [
+    "did:hid:devnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj"
+  ],
+  "verificationMethod": [
+    {
+      "id": "did:hid:devnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj#key-1",
+      "type": "BabyJubJubVerificationKey2023",
+      "controller": "did:hid:devnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj",
+      "publicKeyMultibase": "z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj",
+      "blockchainAccountId": ""
+    }
+  ],
+  "authentication": [],
+  "assertionMethod": [
+    "did:hid:devnet:z8Fo8daHrZrQ4NtDZ9byYgrkEKqK43dkBNxorxpAEm3rj#key-1"
+  ],
+  "capabilityDelegation": [],
+  "capabilityInvocation": [],
+  "keyAgreement": [],
+  "service": []
+}
