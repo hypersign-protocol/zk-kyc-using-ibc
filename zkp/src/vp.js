@@ -1,5 +1,3 @@
-// generate verifiable presentation
-
 const buildEddsa = require("circomlibjs").buildEddsa;
 const buildBabyjub = require("circomlibjs").buildBabyjub;
 const vp = {
@@ -15,7 +13,6 @@ const vp = {
         "proofPurpose": "authentication",
         "verificationMethod": "",
         "challenge": "",
-
         proofValue: {
             R8x: "",
             R8y: "",
@@ -24,7 +21,6 @@ const vp = {
 
     }
 }
-
 
 const generatePresentation = async (verifiableCredential, holderVmID, challenge, holderPrivateKey) => {
     vp.verifiableCredential.push(verifiableCredential)
@@ -41,9 +37,7 @@ const generatePresentation = async (verifiableCredential, holderVmID, challenge,
     vp.proof.proofValue.R8y = F.toObject(signature.R8[1])
     vp.proof.proofValue.S = signature.S
     return vp
-
 }
-
 
 module.exports={
     generatePresentation
